@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SBC Portfo Manager</title>
+  <!-- Include Neutralino.js first -->
+  <script src="js/neutralino.js"></script>
+  <script src="js/main.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <style>
+    :root {
+      --background: #f5f5f5;
+      --container-bg: white;
+      --text-color: #333;
+      --header-color: #2c3e50;
+      --border-color: #ddd;
+      --input-border: #ced4da;
+      --table-header-bg: #e9ecef;
+      --table-header-text: #495057;
+      --table-thead-bg: #f8f9fa;
+      --shadow-color: rgba(0,0,0,0.1);
+      --border-bottom: #ecf0f1;
+    }
+
+    [data-theme="dark"] {
+      --background: #1a1a1a;
+      --container-bg: #2c2c2c;
+      --text-color: #e0e0e0;
+      --header-color: #ffffff;
+      --border-color: #444;
+      --input-border: #666;
+      --table-header-bg: #3a3a3a;
+      --table-header-text: #e0e0e0;
+      --table-thead-bg: #333;
+      --shadow-color: rgba(0,0,0,0.3);
+      --border-bottom: #555;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 20px;
+      background-color: var(--background);
+      color: var(--text-color);
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background-color: var(--container-bg);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px var(--shadow-color);
+    }
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      color: var(--header-color);
+      margin: 0;
+      border-bottom: 2px solid var(--border-bottom);
+      padding-bottom: 10px;
+    }
+    
+    .theme-toggle {
+      display: inline-block;
+      width: 51px;
+      height: 31px;
+      position: relative;
+    }
+
+    .theme-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .theme-toggle .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #d3d3d3;
+      border-radius: 34px;
+      transition: background-color 0.3s ease;
+    }
+
+    .theme-toggle .slider:before {
+      position: absolute;
+      content: "";
+      height: 27px;
+      width: 27px;
+      left: 2px;
+      bottom: 2px;
+      background-color: white;
+      border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle input:checked + .slider {
+      background-color: #4cd964;
+    }
+
+    .theme-toggle input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+
+    [data-theme="dark"] .theme-toggle .slider {
+      background-color: #555;
+    }
+
+    [data-theme="dark"] .theme-toggle input:checked + .slider {
+      background-color: #4cd964;
+    }
+
+    .description {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .info-icon {
+      cursor: pointer;
+      color: #4c75af;
+      font-size: 16px;
+    }
+
+    .info-icon:hover {
+      color: #3a5a88;
+    }
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+      background-color: var(--container-bg);
+    }
+    
+    thead {
+      background-color: var(--table-thead-bg);
+    }
+    
+    td, th {
+      border: 1px solid var(--border-color);
+      padding: 12px 8px;
+      text-align: center;
+    }
+    
+    th {
+      background-color: var(--table-header-bg);
+      color: var(--table-header-text);
+    }
+    
+    input[type=text], input[type=number] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+    }
+    
+    button {
+      margin: 5px;
+      padding: 8px 16px;
+      background-color: #4c75af;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    button:hover {
+      background-color: #3a5a88;
+    }
+    
+    button.delete-btn {
+      background-color: #dc3545;
+    }
+    
+    button.delete-btn:hover {
+      background-color: #c82333;
+    }
+    
+    .actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      margin-top: 10px;
+      box-sizing: border-box;
+      font-family: monospace;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+    }
+    
+    .result-container {
+      margin-top: 20px;
+    }
+    
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .result-container h3 {
+      margin: 0;
+      color: var(--header-color);
+    }
+
+    .copy-btn {
+      background-color: #17a2b8;
+    }
+
+    .copy-btn:hover {
+      background-color: #138496;
+    }
+    
+    pre#output {
+      padding: 10px;
+      border-radius: 4px;
+      font-family: monospace;
+      min-height: 24px;
+    }
+    
+    pre#output.success {
+      color: #28a745;
+    }
+    
+    pre#output.error {
+      color: #dc3545;
+    }
+    
+    .save-btn {
+      background-color: #17a2b8;
+    }
+    
+    .save-btn:hover {
+      background-color: #138496;
+    }
+    
+    .add-row-btn {
+      background-color: #4c75af;
+    }
+    
+    .clear-btn {
+      background-color: #dc3545;
+    }
+    
+    .clear-btn:hover {
+      background-color: #c82333;
+    }
+    
+    .toggle-btn {
+      background-color: #6c757d;
+      margin: 5px;
+    }
+    
+    .toggle-btn:hover {
+      background-color: #5a6268;
+    }
+    
+    .backup-btn {
+      background-color: #6c757d;
+    }
+    
+    .backup-btn:hover {
+      background-color: #5a6268;
+    }
+
+    .restore-btn {
+      background-color: #28a745;
+    }
+
+    .restore-btn:hover {
+      background-color: #218838;
+    }
+    
+    .portfolio-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    select {
+      padding: 8px;
+      border: 1px solid var(--input-border);
+      border-radius: 4px;
+      background-color: var(--container-bg);
+      color: var(--text-color);
+    }
+    
+    .table-container {
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      max-height: 1000px;
+      opacity: 1;
+    }
+    
+    .table-container.hidden {
+      max-height: 0;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>SBC Portfo Manager</h2>
+      <div>
+        <span id="themeLabel">Dark Mode</span>
+        <label class="theme-toggle">
+          <input type="checkbox" onchange="window.toggleTheme()" id="themeCheckbox">
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="description">
+      <p>Manage multiple portfolios and their stock buy entries for the TradingView 'SBC Portfo' indicator</p>
+      <i class="fas fa-info-circle info-icon" onclick="window.showHelpManual()"></i>
+    </div>
+    
+    <div class="portfolio-controls">
+      <select id="portfolioSelect" onchange="window.switchPortfolio(this.value)"></select>
+      <button onclick="window.createPortfolio()" class="add-row-btn">New Portfolio</button>
+      <button onclick="window.renamePortfolio()" class="save-btn">Rename</button>
+      <button onclick="window.deletePortfolio()" class="delete-btn">Delete</button>
+      <button onclick="window.toggleTable()" class="toggle-btn" id="toggleButton">Hide</button>
+    </div>
+    
+    <div class="table-container" id="tableContainer">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Buy Price</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="actions">
+        <button onclick="window.addRow()" class="add-row-btn">+ Add Row</button>
+        <button onclick="window.saveValues()" class="save-btn">Save</button>
+        <button onclick="window.backupPortfolios()" class="backup-btn">Backup</button>
+        <button onclick="window.restorePortfolios()" class="restore-btn">Restore</button>
+        <button onclick="window.clearStorage()" class="clear-btn">Clear</button>
+      </div>
+    </div>
+    
+    <div class="result-container">
+      <div class="result-header">
+        <h3>Indicator Portfolio Value</h3>
+        <button onclick="window.copyToClipboard()" class="copy-btn"><i class="fas fa-copy"></i></button>
+      </div>
+      <textarea id="exportResult" rows="3" placeholder="Portfolio value will appear here" readonly></textarea>
+    </div>
+    
+    <pre id="output"></pre>
+  </div>
+</body>
+</html>
