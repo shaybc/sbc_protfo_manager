@@ -14,6 +14,22 @@ The primary purpose of SBC Portfo Manager is to simplify the process of creating
 
 This tool is ideal for traders who rely on the 'SBC Portfo' indicator to visualize portfolio performance on TradingView and need a reliable way to manage and format their portfolio data.
 
+## Screenshots
+
+the SBN_Portfo_Manager app screenshots, and some screenshots of the 'SBC_Portfo' Indicator in TradingView (TM)
+* this app is not associated with nor represents TradingView
+
+![Screenshot of SBC Portfo Manager](/img/screenshot_1.png)
+
+![Screenshot of SBC Portfo Manager](/img/screenshot_2.png)
+
+![Screenshot of SBC Portfo Manager](/img/screenshot_3.png)
+
+![Screenshot of SBC Portfo Manager](/img/screenshot_4.png)
+
+![Screenshot of SBC Portfo Manager](/img/screenshot_5.png)
+
+
 ## Features
 
 - **Portfolio Management**:
