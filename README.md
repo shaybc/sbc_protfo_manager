@@ -100,6 +100,25 @@ Contributions are welcome! To report bugs, suggest features, or submit pull requ
 2. Create an issue or fork the repository to contribute code.
 3. Follow the contribution guidelines in the repository.
 
+### Running the project
+in dev mode from command line (CMD)
+
+run once:
+```
+cd sbc_protfo
+npm install
+```
+
+then run for each execution:
+```
+neu run
+```
+
+### Building the EXE file
+```
+neu build --release
+```
+
 ## License
 
 This project is licensed under the [Attribution-NonCommercial 4.0 International](LICENSE).

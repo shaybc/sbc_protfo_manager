@@ -311,15 +311,37 @@
     }
     
     .table-container {
-      overflow: hidden;
-      transition: max-height 0.3s ease, opacity 0.3s ease;
-      max-height: 1000px;
-      opacity: 1;
+      overflow-y: auto;
+      max-height: 500px; /* Set a reasonable max height for scrolling */
+      margin-top: 0;
     }
     
-    .table-container.hidden {
+    .table-wrapper.table-hidden .table-container,
+    .table-wrapper.table-hidden .table-header,
+    .table-wrapper.table-hidden .actions {
       max-height: 0;
       opacity: 0;
+      overflow: hidden;
+    }
+    
+    .table-header, .table-body {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .table-header th:nth-child(1), .table-body td:nth-child(1) {
+      width: 10%; /* Smaller width for Index column */
+    }
+    
+    .table-header th:nth-child(2), .table-body td:nth-child(2),
+    .table-header th:nth-child(3), .table-body td:nth-child(3),
+    .table-header th:nth-child(4), .table-body td:nth-child(4),
+    .table-header th:nth-child(5), .table-body td:nth-child(5) {
+      width: 22.5%; /* Equal width for Ticker, Buy Price, Quantity, Actions */
+    }
+    
+    .table-body table {
+      margin-top: 0; /* Remove margin to align with headers */
     }
   </style>
 </head>
@@ -348,18 +370,27 @@
       <button onclick="window.toggleTable()" class="toggle-btn" id="toggleButton">Hide</button>
     </div>
     
-    <div class="table-container" id="tableContainer">
-      <table id="dataTable">
-        <thead>
-          <tr>
-            <th>Ticker</th>
-            <th>Buy Price</th>
-            <th>Quantity</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="table-wrapper" id="tableWrapper">
+      <div class="table-header">
+        <table id="dataTableHeader">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Ticker</th>
+              <th>Buy Price</th>
+              <th>Quantity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="table-container" id="tableContainer">
+        <div class="table-body">
+          <table id="dataTable">
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
       <div class="actions">
         <button onclick="window.addRow()" class="add-row-btn">+ Add Row</button>
         <button onclick="window.saveValues()" class="save-btn">Save</button>
@@ -379,5 +410,6 @@
     
     <pre id="output"></pre>
   </div>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93c9aa6d580ebcc8',t:'MTc0NjcxNDczOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

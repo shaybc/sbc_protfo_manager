@@ -50,6 +50,19 @@ window.onload = () => {
         return document.querySelector("#dataTable tbody");
     }
 
+    // Helper function to update row indices
+    function updateRowIndices() {
+        const tbody = getTableBody();
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll("tr");
+        rows.forEach((row, index) => {
+            const indexCell = row.querySelector("td:first-child");
+            if (indexCell) {
+                indexCell.textContent = index + 1;
+            }
+        });
+    }
+
     // Helper function to update exportResult textarea and check for changes
     function updateExportResult() {
         const tbody = getTableBody();
@@ -101,7 +114,11 @@ window.onload = () => {
         // Convert ticker to uppercase
         ticker = ticker.toUpperCase();
 
+        // Calculate index (number of rows + 1)
+        const index = tbody.children.length;
+
         row.innerHTML = `
+            <td>${index}</td>
             <td><input type="text" value="${ticker}" placeholder="AAPL"/></td>
             <td><input type="number" step="any" value="${price}" placeholder="150.25"/></td>
             <td><input type="number" step="any" value="${qty}" placeholder="10"/></td>
@@ -132,20 +149,21 @@ window.onload = () => {
     window.removeRow = function(btn) {
         const row = btn.closest("tr");
         row.parentNode.removeChild(row);
+        updateRowIndices(); // Reindex rows after deletion
         updateExportResult();
     };
 
     // Toggle table visibility
     window.toggleTable = function() {
-        const tableContainer = document.getElementById("tableContainer");
+        const tableWrapper = document.getElementById("tableWrapper");
         const toggleButton = document.getElementById("toggleButton");
 
         if (isTableVisible) {
-            tableContainer.classList.add("hidden");
+            tableWrapper.classList.add("table-hidden");
             toggleButton.textContent = "Show";
             isTableVisible = false;
         } else {
-            tableContainer.classList.remove("hidden");
+            tableWrapper.classList.remove("table-hidden");
             toggleButton.textContent = "Hide";
             isTableVisible = true;
         }
@@ -677,6 +695,7 @@ window.onload = () => {
         }
 
         updateExportResult();
+        updateRowIndices(); // Ensure indices are set after parsing
     }
 
     // Clear storage and reset app state
@@ -791,14 +810,14 @@ window.onload = () => {
             themeLabel.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
         }
         isTableVisible = tableVisible;
-        const tableContainer = document.getElementById("tableContainer");
+        const tableWrapper = document.getElementById("tableWrapper");
         const toggleButton = document.getElementById("toggleButton");
-        if (tableContainer && toggleButton) {
+        if (tableWrapper && toggleButton) {
             if (isTableVisible) {
-                tableContainer.classList.remove("hidden");
+                tableWrapper.classList.remove("table-hidden");
                 toggleButton.textContent = "Hide";
             } else {
-                tableContainer.classList.add("hidden");
+                tableWrapper.classList.add("table-hidden");
                 toggleButton.textContent = "Show";
             }
         }
